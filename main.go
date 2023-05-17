@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"math/rand"
@@ -23,14 +24,13 @@ func main() {
 		return
 	}
 
-	f, err := os.Open(filepath.Join("images", imageFiles[rand.Intn(len(imageFiles))].Name()))
+	f, err := images.ReadFile(filepath.Join("images", imageFiles[rand.Intn(len(imageFiles))].Name()))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
-	defer f.Close()
 
-	if err := clipboard.Write(f); err != nil {
+	if err := clipboard.Write(bytes.NewReader(f)); err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
